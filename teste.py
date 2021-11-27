@@ -242,10 +242,10 @@ class Gerenciador():
 def parse_argumentos():
     """Faz o parse dos argumentos"""
     parser = argparse.ArgumentParser()
-    parser.add_argument('--numClientes', help='Numero de Clientes. [5]', type=int, default = random.randint(2, 10))
-    parser.add_argument('--numGarcons', help='Numero de garcons. [3]', type=int, default = random.randint(1, 4))
-    parser.add_argument('--capacidadeGarcons', help='Capacidade dos garcons. [3]', type=int, default = random.randint(1, 5))
-    parser.add_argument('--numRodadas', help='Numero de rodadas. [6]', type=int, default = random.randint(2, 6))
+    parser.add_argument('--numClientes', help='Numero de Clientes.', type=int, default = random.randint(1, 5))
+    parser.add_argument('--numGarcons', help='Numero de garcons. ', type=int, default = random.randint(2, 7))
+    parser.add_argument('--capacidadeGarcons', help='Capacidade dos garcons.', type=int, default = random.randint(1, 5))
+    parser.add_argument('--numRodadas', help='Numero de rodadas.', type=int, default = random.randint(2, 6))
     return parser.parse_args()
 
 def main():
