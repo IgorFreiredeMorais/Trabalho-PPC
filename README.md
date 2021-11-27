@@ -1,6 +1,8 @@
 # Trabalho-PPC
 
 Trabalho de ppc 2021/01
+Igor Freire de Morais 201911142
+Nathan Araújo Silva 201910762
 
 Nosso bar resolveu liberar n rodadas grátis(número aleatório entre 2 e 6) para x clientes presentes no
 estabelecimento (número aleatório entre 1 e 5). O bar possui t garçons(número aleatório entre 2 e 7). Cada
