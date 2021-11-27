@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 @author: Igor Freire de Morais 201911142
 @author: Nathan Araújo Silva 201910762
@@ -15,36 +13,31 @@ import argparse
 # Configuraçoes do log
 logging.basicConfig(level=logging.DEBUG, format='%(message)s',)
 
-
 class Cliente(threading.Thread):
     """Classe Cliente do tipo Thread"""
     def __init__(self, nome, gerenciador):
         threading.Thread.__init__(self)
         self.nome = nome
-        # gerenciador compartilhado
+        # gerenciador
         self.gerenciador = gerenciador
-        # quando der self.e_esperar.wait() a thread espera receber o pedido
+        # thread espera receber o pedido
         self.e_esperar = threading.Event()
         self.beber = True
 
     def continuar(self):
-        # o garçon utiliza esse metodo para acordar o cliente
+        # o garçon utiliza esse metodo para chamar o cliente
         self.e_esperar.set()
 
     def fazPedido(self):
         """50% de chance do cliente beber"""
         chance = random.randint(0, 1)
         if chance == 1:
-            # se nao quiser beber fala para o gerente que nao bebera e
-            # o garcom ira o acordar e em seguida esperara a prox. rodada
+            # se não quiser beber, espera a próxima rodada
             self.beber = False
             self.gerenciador.nao_quer_beber(self)
             self.e_esperar.wait()
-            # habilita o lock interno do e_esperar para poder dar wait (again)
             self.e_esperar.clear()
-            logging.info(" ".join(["Cliente",
-                                   str(self.nome),
-                                   "não irá beber"]))
+            logging.info(" ".join(["Cliente", str(self.nome), "não irá beber"]))
             # espera a proxima rodada
             self.gerenciador.espera_beberem()
         else:
@@ -53,8 +46,7 @@ class Cliente(threading.Thread):
             self.gerenciador.pedir(self)
 
     def esperaPedido(self):
-        """Espera o garcom acordar ele e
-           depois libera o cliente para poder esperar novamente (.clear())"""
+        """O cliente espera o garçom chamá-lo e depois libera o cliente para poder esperar novamente (.clear())"""
         self.e_esperar.wait()
         self.e_esperar.clear()
 
@@ -62,17 +54,13 @@ class Cliente(threading.Thread):
         """Tempo random para ele pegar o pedido do garcom antes de beber"""
         tempo = random.randint(1, 2)
         time.sleep(tempo)
-        logging.info(" ".join(["Cliente",
-                     str(self.nome),
-                     "está bebendo"]))
+        logging.info(" ".join(["Cliente", str(self.nome), "está bebendo"]))
 
     def consomePedido(self):
         """Toma em um tempo aleatório e espera todos tomarem para iniciar a proxima rodada"""
         tempo = random.randint(1, 2)
         time.sleep(tempo)
-        logging.info(" ".join(["Cliente",
-                     str(self.nome),
-                     "terminou de beber"]))
+        logging.info(" ".join(["Cliente", str(self.nome), "terminou de beber"]))
         self.gerenciador.espera_beberem()
 
     def run(self):
@@ -83,7 +71,6 @@ class Cliente(threading.Thread):
                 self.esperaPedido()
                 self.recebePedido()
                 self.consomePedido()
-
 
 class Garcom(threading.Thread):
     """Classe garcom do tipo thread"""
@@ -106,10 +93,7 @@ class Garcom(threading.Thread):
             if cliente_atual is not None:
                 if cliente_atual.beber:
                     self.anotados.append(cliente_atual)
-                    logging.info(" ".join(["Garçom",
-                                 str(self.nome),
-                                 "anotou o pedido do cliente",
-                                 str(cliente_atual.nome)]))
+                    logging.info(" ".join(["Garçom", str(self.nome), "anotou o pedido do cliente", str(cliente_atual.nome)]))
                 else:
                     # se o cliente nao quiser beber deixa ele esperar prox. rod
                     cliente_atual.continuar()
@@ -123,10 +107,7 @@ class Garcom(threading.Thread):
             # randomiza um tempo que ele leva para ir ate a copa
             tempo = random.randint(1, 2)
             time.sleep(tempo)
-            logging.info(" ".join(["Garçom",
-                         str(self.nome),
-                         "levou para o bartender os pedidos dos clientes",
-                         str([i.nome for i in self.anotados])]))
+            logging.info(" ".join(["Garçom", str(self.nome), "levou para o bartender os pedidos dos clientes", str([i.nome for i in self.anotados])]))
 
     def entregaPedidos(self):
         """Vai de cliente em cliente da lista e entrega o pedido do garcom"""
@@ -147,7 +128,6 @@ class Garcom(threading.Thread):
             self.recebeMaximoPedidos()
             self.registraPedidos()
             self.entregaPedidos()
-
 
 class Gerenciador():
     """Permite exclusao mutua entre as threads e bloqueia açoes ate certas condicoes serem satisfeitas"""
@@ -262,10 +242,10 @@ class Gerenciador():
 def parse_argumentos():
     """Faz o parse dos argumentos"""
     parser = argparse.ArgumentParser()
-    parser.add_argument('--numClientes', help='Numero de Clientes. [5]', type=int, default=5)
-    parser.add_argument('--numGarcons', help='Numero de garcons. [3]', type=int, default=3)
-    parser.add_argument('--capacidadeGarcons', help='Capacidade dos garcons. [3]', type=int, default=3)
-    parser.add_argument('--numRodadas', help='Numero de rodadas. [6]', type=int, default=6)
+    parser.add_argument('--numClientes', help='Numero de Clientes. [5]', type=int, default = random.randint(2, 10))
+    parser.add_argument('--numGarcons', help='Numero de garcons. [3]', type=int, default = random.randint(1, 4))
+    parser.add_argument('--capacidadeGarcons', help='Capacidade dos garcons. [3]', type=int, default = random.randint(1, 5))
+    parser.add_argument('--numRodadas', help='Numero de rodadas. [6]', type=int, default = random.randint(2, 6))
     return parser.parse_args()
 
 def main():
